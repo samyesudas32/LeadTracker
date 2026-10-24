@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Remix Lead Data Extractor Final 5a2",
+  "description": "Extract lost year/month, full name, phone number, email ID, and city from lead data with clickable tel: links, call attendance status, and notes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

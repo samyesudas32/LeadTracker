@@ -1,0 +1,336 @@
+{
+  "entities": {
+    "Lead": {
+      "title": "Lead",
+      "description": "A client booking or CRM lead record",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the lead",
+          "maxLength": 128
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Full name of the client",
+          "maxLength": 200
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "Contact phone number",
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "description": "Contact email address",
+          "maxLength": 200
+        },
+        "city": {
+          "type": "string",
+          "description": "City or territory",
+          "maxLength": 150
+        },
+        "month": {
+          "type": "string",
+          "description": "Assigned cohort month",
+          "maxLength": 100
+        },
+        "status": {
+          "type": "string",
+          "description": "Current workflow status of the lead",
+          "enum": [
+            "Interested",
+            "Requires Follow-up",
+            "Pending Call",
+            "No Answer",
+            "Not Interested"
+          ]
+        },
+        "notes": {
+          "type": "string",
+          "description": "General or preset notes",
+          "maxLength": 2000
+        },
+        "manualNotes": {
+          "type": "string",
+          "description": "User custom typed notes",
+          "maxLength": 2000
+        },
+        "handlerId": {
+          "type": "string",
+          "description": "Identifier for assigned handler",
+          "maxLength": 128
+        },
+        "handlerName": {
+          "type": "string",
+          "description": "Display name of assigned handler",
+          "maxLength": 100
+        },
+        "assignedAt": {
+          "type": "string",
+          "description": "ISO timestamp when handler was assigned/updated",
+          "maxLength": 100
+        },
+        "reportDate": {
+          "type": "string",
+          "description": "YYYY-MM-DD effective daily report date (accounting for 11 PM cutoff)",
+          "maxLength": 20
+        },
+        "isPostCutoffRollover": {
+          "type": "boolean",
+          "description": "Indicates if assignment was processed after 11 PM cutoff and rolled into following day"
+        },
+        "callCount": {
+          "type": "number",
+          "description": "Total call attempts recorded"
+        },
+        "lastDialedAt": {
+          "type": "string",
+          "description": "Timestamp of last outbound dial",
+          "maxLength": 100
+        },
+        "paymentReceipt": {
+          "type": "string",
+          "description": "Payment receipt reference or notes",
+          "maxLength": 250
+        },
+        "proof": {
+          "type": "string",
+          "description": "Proof document notes or reference",
+          "maxLength": 250
+        },
+        "uploadDate": {
+          "type": "string",
+          "description": "Date format YYYY-MM-DD",
+          "maxLength": 20
+        },
+        "uploadedFileName": {
+          "type": "string",
+          "description": "Name of source file",
+          "maxLength": 255
+        },
+        "fileId": {
+          "type": "string",
+          "description": "Reference ID to UploadedFileRecord",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of creation",
+          "maxLength": 100
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update",
+          "maxLength": 100
+        }
+      },
+      "required": [
+        "id",
+        "fullName",
+        "phoneNumber",
+        "email",
+        "city",
+        "month",
+        "status",
+        "createdAt"
+      ]
+    },
+    "UploadedFile": {
+      "title": "UploadedFile",
+      "description": "Record of imported files and batches",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique file record ID",
+          "maxLength": 128
+        },
+        "fileName": {
+          "type": "string",
+          "description": "Original file name",
+          "maxLength": 255
+        },
+        "uploadDate": {
+          "type": "string",
+          "description": "Date tag in YYYY-MM-DD format",
+          "maxLength": 30
+        },
+        "uploadedAt": {
+          "type": "string",
+          "description": "ISO timestamp of upload",
+          "maxLength": 100
+        },
+        "fileSize": {
+          "type": "string",
+          "description": "Human readable file size",
+          "maxLength": 50
+        },
+        "fileType": {
+          "type": "string",
+          "description": "File format extension",
+          "enum": ["xlsx", "xls", "xml", "csv", "text", "manual"]
+        },
+        "recordCount": {
+          "type": "number",
+          "description": "Count of records imported in this batch"
+        }
+      },
+      "required": [
+        "id",
+        "fileName",
+        "uploadDate",
+        "uploadedAt",
+        "fileType",
+        "recordCount"
+      ]
+    },
+    "AppSettings": {
+      "title": "AppSettings",
+      "description": "Global application configuration and handler team records",
+      "type": "object",
+      "properties": {
+        "softwareTitle": {
+          "type": "string",
+          "description": "Brand title of the application",
+          "maxLength": 150
+        },
+        "activeFrontPageHandler": {
+          "type": "string",
+          "description": "Filter selection for active handler",
+          "maxLength": 100
+        },
+        "defaultNewLeadHandler": {
+          "type": "string",
+          "description": "Default assignment for newly imported leads",
+          "maxLength": 100
+        },
+        "companyName": {
+          "type": "string",
+          "description": "Display company name",
+          "maxLength": 150
+        },
+        "tableDensity": {
+          "type": "string",
+          "enum": ["comfortable", "compact"]
+        },
+        "dateFormat": {
+          "type": "string",
+          "enum": ["MMM D, YYYY", "YYYY-MM-DD", "DD/MM/YYYY"]
+        },
+        "defaultLeadStatus": {
+          "type": "string",
+          "enum": [
+            "Interested",
+            "Requires Follow-up",
+            "Pending Call",
+            "No Answer",
+            "Not Interested"
+          ]
+        },
+        "autoIncrementCallOnDial": {
+          "type": "boolean",
+          "description": "Whether dial auto increments counter"
+        },
+        "duplicateCheckMode": {
+          "type": "string",
+          "enum": ["allow", "warn", "skip"]
+        },
+        "defaultImportMode": {
+          "type": "string",
+          "enum": ["append", "replace"]
+        },
+        "autoFillCurrentMonthIfMissing": {
+          "type": "boolean",
+          "description": "Autofill month tag"
+        },
+        "cutoffHour": {
+          "type": "number",
+          "description": "Daily handler assignment cutoff hour (default 23 for 11:00 PM)"
+        },
+        "enableCutoffRollover": {
+          "type": "boolean",
+          "description": "Whether assignments after cutoff automatically roll into following day"
+        }
+      },
+      "required": [
+        "softwareTitle",
+        "activeFrontPageHandler",
+        "defaultNewLeadHandler"
+      ]
+    },
+    "WorkspacePage": {
+      "title": "WorkspacePage",
+      "description": "Independent workspace page tab instance",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique workspace page ID",
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the workspace page",
+          "maxLength": 150
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description of the workspace",
+          "maxLength": 500
+        },
+        "color": {
+          "type": "string",
+          "description": "Color accent identifier",
+          "maxLength": 50
+        },
+        "customColor": {
+          "type": "string",
+          "description": "Optional custom hex color code e.g. #8B5CF6",
+          "maxLength": 32
+        },
+        "isDefault": {
+          "type": "boolean",
+          "description": "Whether this is the default workspace"
+        },
+        "order": {
+          "type": "number",
+          "description": "Sort order index"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation ISO timestamp",
+          "maxLength": 100
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update ISO timestamp",
+          "maxLength": 100
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/leads/{leadId}": {
+      "schema": "Lead",
+      "description": "Client lead records with instant multi-device real-time sync"
+    },
+    "/uploadedFiles/{fileId}": {
+      "schema": "UploadedFile",
+      "description": "File upload log and metadata history"
+    },
+    "/settings/{settingsId}": {
+      "schema": "AppSettings",
+      "description": "System configuration and team handler settings"
+    },
+    "/pages/{pageId}": {
+      "schema": "WorkspacePage",
+      "description": "Unlimited independent workspace pages with dedicated leads and files"
+    }
+  }
+}

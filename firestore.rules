@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    function isValidLead(data) {
+      return (!('id' in data) || (data.id is string && data.id.size() <= 128)) &&
+             (!('fullName' in data) || (data.fullName is string && data.fullName.size() <= 200)) &&
+             (!('phoneNumber' in data) || (data.phoneNumber is string && data.phoneNumber.size() <= 100)) &&
+             (!('email' in data) || (data.email is string && data.email.size() <= 200)) &&
+             (!('city' in data) || (data.city is string && data.city.size() <= 150)) &&
+             (!('month' in data) || (data.month is string && data.month.size() <= 100)) &&
+             (!('status' in data) || (data.status is string && data.status.size() <= 100)) &&
+             (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 100));
+    }
+
+    function isValidUploadedFile(data) {
+      return (!('id' in data) || (data.id is string && data.id.size() <= 128)) &&
+             (!('fileName' in data) || (data.fileName is string && data.fileName.size() <= 255)) &&
+             (!('uploadDate' in data) || (data.uploadDate is string && data.uploadDate.size() <= 30)) &&
+             (!('uploadedAt' in data) || (data.uploadedAt is string && data.uploadedAt.size() <= 100)) &&
+             (!('fileType' in data) || (data.fileType is string && data.fileType.size() <= 30)) &&
+             (!('recordCount' in data) || data.recordCount is number);
+    }
+
+    function isValidAppSettings(data) {
+      return (!('softwareTitle' in data) || (data.softwareTitle is string && data.softwareTitle.size() <= 150)) &&
+             (!('activeFrontPageHandler' in data) || (data.activeFrontPageHandler is string && data.activeFrontPageHandler.size() <= 100)) &&
+             (!('defaultNewLeadHandler' in data) || (data.defaultNewLeadHandler is string && data.defaultNewLeadHandler.size() <= 100)) &&
+             (!('mainHeadline' in data) || (data.mainHeadline is string && data.mainHeadline.size() <= 255));
+    }
+
+    function isValidPage(data) {
+      return (!('id' in data) || (data.id is string && data.id.size() <= 128)) &&
+             (!('name' in data) || (data.name is string && data.name.size() <= 150)) &&
+             (!('createdAt' in data) || (data.createdAt is string && data.createdAt.size() <= 100)) &&
+             (!('customColor' in data) || (data.customColor is string && data.customColor.size() <= 32));
+    }
+
+    // Default deny for unmapped collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Health / initial test connection probe
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+
+    // Leads collection
+    match /leads/{leadId} {
+      allow get: if isValidId(leadId);
+      allow list: if true;
+      allow create: if isValidId(leadId) && isValidLead(request.resource.data);
+      allow update: if isValidId(leadId) && isValidLead(request.resource.data);
+      allow delete: if isValidId(leadId);
+    }
+
+    // Uploaded files log
+    match /uploadedFiles/{fileId} {
+      allow get: if isValidId(fileId);
+      allow list: if true;
+      allow create: if isValidId(fileId) && isValidUploadedFile(request.resource.data);
+      allow update: if isValidId(fileId) && isValidUploadedFile(request.resource.data);
+      allow delete: if isValidId(fileId);
+    }
+
+    // Global application settings & handler team registry
+    match /settings/{settingsId} {
+      allow get: if isValidId(settingsId);
+      allow list: if true;
+      allow create: if isValidId(settingsId) && isValidAppSettings(request.resource.data);
+      allow update: if isValidId(settingsId) && isValidAppSettings(request.resource.data);
+      allow delete: if isValidId(settingsId);
+    }
+
+    // Unlimited independent workspace pages
+    match /pages/{pageId} {
+      allow get: if isValidId(pageId);
+      allow list: if true;
+      allow create: if isValidId(pageId) && isValidPage(request.resource.data);
+      allow update: if isValidId(pageId) && isValidPage(request.resource.data);
+      allow delete: if isValidId(pageId);
+    }
+  }
+}
